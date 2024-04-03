@@ -12,13 +12,13 @@ export default class DropdownCreator {
     // declare show function (to remove the event listener later)
     const showFunction = (event) => {
       event.stopPropagation();
-      this.ShowDropdown(showFunction, dropdown_button_id, dropdown_content_class);
+      this.ShowDropdown(dropdown_button_id, dropdown_content_class);
     };
 
     // declare hide function (to remove the event listener later)
     const hideFunction = (event) => {
       event.stopPropagation();
-      this.HideDropdown(showFunction, this.activeDropdown.dropdown_button_id, this.activeDropdown.dropdown_content_class);
+      this.HideDropdown(null, null);
     };
 
     // event listener to show
@@ -30,10 +30,8 @@ export default class DropdownCreator {
     }
   }
 
-  ShowDropdown(showFunction, dropdown_button_id, dropdown_content_class) {
+  ShowDropdown(dropdown_button_id, dropdown_content_class) {
     console.log(`show called`);
-    // find the button node
-    // const button = document.querySelector(`#${dropdown_button_id}`);
 
     // if there is no active dropdown
     if (this.activeDropdown.dropdown_button_id == null) {
@@ -42,35 +40,32 @@ export default class DropdownCreator {
       this.AnimateDropdown(dropdown_content_class);
       // update that this is the active dropdown
       this.activeDropdown = { dropdown_button_id, dropdown_content_class };
-      // remove the showFunction event listener
-      // button.removeEventListener("click", showFunction);
     } else {
       console.log(`there is an active dropdown:`);
       console.log(this.activeDropdown);
       // if there is an active dropdown
       // call the HideDropdown method on the active dropdown
-      this.HideDropdown(showFunction, dropdown_button_id, dropdown_content_class);
-      // show the dropdown menu
-      // this.AnimateDropdown(dropdown_content_class);
-      // // update that this is the active dropdown
-      // this.activeDropdown = { dropdown_button_id, dropdown_content_class };
-      // remove the showFunction event listener
-      // button.removeEventListener("click", showFunction);
+      this.HideDropdown(dropdown_button_id, dropdown_content_class);
     }
   }
 
-  HideDropdown(showFunction, dropdown_button_id, dropdown_content_class) {
-    console.log(`hide called`);
+  HideDropdown(dropdown_button_id, dropdown_content_class) {
+    console.log(`hider called with ${dropdown_button_id} and ${dropdown_content_class}`);
     console.log(`the currently active dropdown is:`);
     console.log(this.activeDropdown);
 
+    let activeD = this.activeDropdown.dropdown_button_id;
+
     if (this.activeDropdown.dropdown_button_id !== null) {
+      console.log("hider says: there is an active dropdown! lemme close it!");
       this.AnimateDropdown(this.activeDropdown.dropdown_content_class);
-      let correctButton = document.querySelector(`#${this.activeDropdown.dropdown_button_id}`);
-      correctButton.addEventListener("click", showFunction);
       this.activeDropdown = { dropdown_button_id: null, dropdown_content_class: null };
       if (dropdown_button_id !== null && dropdown_content_class !== null) {
-        this.ShowDropdown(dropdown_button_id, dropdown_content_class);
+        console.log(`hider says: button and content that were given to me are not null!`);
+        if (dropdown_button_id !== activeD) {
+          console.log(`dropdown given to me and the active dropdown are not the same! I'm calling shower!`);
+          this.ShowDropdown(dropdown_button_id, dropdown_content_class);
+        }
       }
     }
   }
